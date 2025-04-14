@@ -9,8 +9,8 @@ import kotlinx.coroutines.launch
 
 class NoteViewModel(
     private val repository: NoteRepository,
-): ViewModel() {
-    val allNotes = repository.allNotes
+) : ViewModel() {
+    val allNotes: Flow<List<Note>> = repository.allNotes
 
     fun insert(note: Note) = viewModelScope.launch {
         repository.insert(note)
@@ -18,5 +18,9 @@ class NoteViewModel(
 
     fun delete(note: Note) = viewModelScope.launch {
         repository.delete(note)
+    }
+
+    fun update(note: Note) = viewModelScope.launch {
+        repository.insert(note)
     }
 }

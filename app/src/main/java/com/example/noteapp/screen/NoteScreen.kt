@@ -1,3 +1,5 @@
+package com.example.noteapp.screen
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,6 +13,7 @@ import com.example.noteapp.viewmodel.NoteViewModel
 import com.example.noteapp.data.Note
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit // Thêm mới
 
 @Composable
 fun NoteScreen(viewModel: NoteViewModel, navController: NavController) {
@@ -36,7 +39,9 @@ fun NoteScreen(viewModel: NoteViewModel, navController: NavController) {
             LazyColumn {
                 items(notes) { note ->
                     Card(
-                        modifier = Modifier.fillMaxWidth().padding(8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
                     ) {
                         Row(
                             modifier = Modifier
@@ -48,13 +53,25 @@ fun NoteScreen(viewModel: NoteViewModel, navController: NavController) {
                                 Text(text = note.title, fontWeight = FontWeight.Bold)
                                 Text(text = note.content)
                             }
-                            IconButton(
-                                onClick = { noteToDelete = note }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Delete,
-                                    contentDescription = "Delete Note"
-                                )
+                            Row {
+                                IconButton(
+                                    onClick = {
+                                        navController.navigate("edit_note/${note.id}")
+                                    }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Edit,
+                                        contentDescription = "Chỉnh sửa ghi chú"
+                                    )
+                                }
+                                IconButton(
+                                    onClick = { noteToDelete = note }
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Delete,
+                                        contentDescription = "Xóa ghi chú"
+                                    )
+                                }
                             }
                         }
                     }
@@ -65,8 +82,8 @@ fun NoteScreen(viewModel: NoteViewModel, navController: NavController) {
         if (noteToDelete != null) {
             AlertDialog(
                 onDismissRequest = { noteToDelete = null },
-                title = { Text("Xác nhận xoá") },
-                text = { Text("Bạn có chắc chắn muốn xoá ghi chú này không?") },
+                title = { Text("Xác nhận xóa") },
+                text = { Text("Bạn có chắc chắn muốn xóa ghi chú này không?") },
                 confirmButton = {
                     TextButton(onClick = {
                         noteToDelete?.let { viewModel.delete(it) }
